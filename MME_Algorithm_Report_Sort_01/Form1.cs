@@ -136,7 +136,8 @@ namespace MME_Algorithm_Report_Sort_01
         // 빗질정렬 함수 (미구현)
         public object CombSort(int[] inputArray)
         {
-            int temp, i, gap, swap;
+            int i;
+            //int temp, gap, swap;
 
             var outputArray = new int[inputArray.Length];
             for (i = 0; i < outputArray.Length; i++)
