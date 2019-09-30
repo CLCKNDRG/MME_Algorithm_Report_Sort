@@ -259,63 +259,73 @@ namespace MME_Algorithm_Report_Sort_01
         }
         public int QuickSort_Partition(int[] outputArray, int left, int right)
         {
-            int temp, pivot;
+            int temp;
 
-            pivot = outputArray[left];
-            while (true)
+            int pivot = outputArray[left];
+            int low = left + 1;
+            int high = right;
+
+            while (low <= high)
             {
-                while (outputArray[left] < pivot)
+                while (pivot >= outputArray[low] && low <= right)
                 {
-                    left++;
+                    low++;
                 }
-                while (outputArray[right] > pivot)
+                while (pivot <= outputArray[high] && high >= left+1)
                 {
-                    right--;
+                    high--;
                 }
-                // 오름차순 정렬
-                if (ascend.Checked == true)
+                if (low <= high)
                 {
-                    if (left < right)
-                    {
-                        temp = outputArray[right];
-                        outputArray[right] = outputArray[left];
-                        outputArray[left] = temp;
-                    }
-                    else
-                    {
-                        return right;
-                    }
-                }
-                // 내림차순 정렬
-                else if (descend.Checked == true)
-                {
-                    if (left > right)
-                    {
-                        temp = outputArray[right];
-                        outputArray[right] = outputArray[left];
-                        outputArray[left] = temp;
-                    }
-                    else
-                    {
-                        return right;
-                    }
+                    temp = outputArray[low];
+                    outputArray[low] = outputArray[high];
+                    outputArray[high] = temp;
                 }
             }
+            temp = outputArray[left];
+            outputArray[left] = outputArray[high];
+            outputArray[high] = temp;
+
+            return high;
+        }
+        public int QuickSort_Partition_D(int[] outputArray, int left, int right)
+        {
+            int temp;
+
+            int pivot = outputArray[left];
+            int low = right;
+            int high = left + 1;
+
+            while (low <= high)
+            {
+                while (pivot >= outputArray[low] && low <= left + 1)
+                {
+                    low--;
+                }
+                while (pivot <= outputArray[high] && high >= right)
+                {
+                    high++;
+                }
+                if (low >= high)
+                {
+                    temp = outputArray[low];
+                    outputArray[low] = outputArray[high];
+                    outputArray[high] = temp;
+                }
+            }
+            temp = outputArray[left];
+            outputArray[left] = outputArray[high];
+            outputArray[high] = temp;
+
+            return high;
         }
         public object QuickSort_Sort(int[] outputArray, int left, int right)
         {
-            int pivot;
-            if (left < right)
+            if (left <= right)
             {
-                pivot = QuickSort_Partition(outputArray, left, right);
-                if (pivot > 1)
-                {
-                    QuickSort_Sort(outputArray, left, pivot - 1);
-                }
-                if (pivot+1 < right)
-                {
-                    QuickSort_Sort(outputArray, pivot + 1, right);
-                }
+                int pivot = QuickSort_Partition(outputArray, left, right);
+                QuickSort_Sort(outputArray, left, pivot - 1);
+                QuickSort_Sort(outputArray, pivot + 1, right);
             }
             return null;
         }
@@ -353,7 +363,7 @@ namespace MME_Algorithm_Report_Sort_01
         }
         public object MergeSort_Merge(int[] outputArray, int[] sortArray, int left, int mid, int right)
         {
-            int i, j, k, l;
+            int i, j, k;
             i = left;
             j = mid + 1;
             k = left;
