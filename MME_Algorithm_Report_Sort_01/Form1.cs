@@ -254,12 +254,13 @@ namespace MME_Algorithm_Report_Sort_01
 
             QuickSort_Sort(outputArray, left, right);
 
-            OutputPrint(textBox_Bubble, outputArray);
+            OutputPrint(textBox_Quick, outputArray);
             return null;
         }
         public int QuickSort_Partition(int[] outputArray, int left, int right)
         {
-            int pivot;
+            int temp, pivot;
+
             pivot = outputArray[left];
             while (true)
             {
@@ -276,9 +277,13 @@ namespace MME_Algorithm_Report_Sort_01
                 {
                     if (left < right)
                     {
-                        int temp = outputArray[right];
+                        temp = outputArray[right];
                         outputArray[right] = outputArray[left];
                         outputArray[left] = temp;
+                    }
+                    else
+                    {
+                        return right;
                     }
                 }
                 // 내림차순 정렬
@@ -286,14 +291,14 @@ namespace MME_Algorithm_Report_Sort_01
                 {
                     if (left > right)
                     {
-                        int temp = outputArray[right];
+                        temp = outputArray[right];
                         outputArray[right] = outputArray[left];
                         outputArray[left] = temp;
                     }
-                }
-                else
-                {
-                    return right;
+                    else
+                    {
+                        return right;
+                    }
                 }
             }
         }
@@ -312,6 +317,91 @@ namespace MME_Algorithm_Report_Sort_01
                     QuickSort_Sort(outputArray, pivot + 1, right);
                 }
             }
+            return null;
+        }
+        //
+
+        // 병합정렬 함수
+        public object MergeSort(int[] inputArray)
+        {
+            int i;
+
+            var outputArray = new int[inputArray.Length];
+            for (i = 0; i < outputArray.Length; i++)
+                outputArray[i] = inputArray[i];
+
+            var sortArray = new int[outputArray.Length];
+
+            MergeSort_Sort(outputArray, sortArray, 0, outputArray.Length - 1);
+
+            OutputPrint(textBox_2Merge, outputArray);
+            return null;
+        }
+        public object MergeSort_Sort(int[] outputArray, int[] sortArray, int left, int right)
+        {
+            int mid;
+
+            if (left < right)
+            {
+                mid = (left + right) / 2;
+                MergeSort_Sort(outputArray, sortArray, left, mid);
+                MergeSort_Sort(outputArray, sortArray, mid + 1, right);
+                MergeSort_Merge(outputArray, sortArray, left, mid, right);
+            }
+
+            return null;
+        }
+        public object MergeSort_Merge(int[] outputArray, int[] sortArray, int left, int mid, int right)
+        {
+            int i, j, k, l;
+            i = left;
+            j = mid + 1;
+            k = left;
+
+            // 분할 된 배열을 합병한다
+            while (i<=mid && j<=right)
+            {
+                // 오름차순 정렬
+                if (ascend.Checked == true)
+                {
+                    if (outputArray[i] <= outputArray[j])
+                    {
+                        sortArray[k++] = outputArray[i++];
+                    }
+                    else
+                    {
+                        sortArray[k++] = outputArray[j++];
+                    }
+                }
+                // 내림차순 정렬
+                else if (descend.Checked == true)
+                {
+                    if (outputArray[i] >= outputArray[j])
+                    {
+                        sortArray[k++] = outputArray[i++];
+                    }
+                    else
+                    {
+                        sortArray[k++] = outputArray[j++];
+                    }
+                }
+
+            }
+
+            // 값들을 일괄적으로 복사한다
+            while (i <= mid)
+            {
+                sortArray[k++] = outputArray[i++];
+            }
+            while (j <= right)
+            {
+                sortArray[k++] = outputArray[j++];
+            }
+            for (i=left; i<=right; i++)
+            {
+                outputArray[i] = sortArray[i];
+            }
+
             return null;
         }
         //
@@ -367,67 +457,99 @@ namespace MME_Algorithm_Report_Sort_01
             for (int i = 0; i < outputArray.Length; i++)
                 outputArray[i] = inputArray[i];
 
-            for (int i = outputArray.Length/2; i>0; i--)
+            if (ascend.Checked == true)
             {
-                HeapSort_Heap(outputArray, i);
+                HeapSort_Sort(outputArray);
             }
-
-            for (int i = outputArray.Length; i > 0; i--)
+            else if (descend.Checked == true)
             {
-                HeapSort_Sort(outputArray, i);
+                HeapSort_Sort_D(outputArray);
             }
 
             OutputPrint(textBox_Heap, outputArray);
             return null;
         }
-        public object HeapSort_Heap(int[] outputArray, int i)
+        public object HeapSort_Heap(int[] outputArray, int n, int i)
         {
-            int key, temp;
+            int key, left, right, temp;
+            key = i;
+            left = i * 2 + 1;
+            right = i * 2 + 2;
 
-            key = 2 * i;
-            if (key < outputArray.Length && outputArray[key] < outputArray[key + 1])
+            if (left < n && outputArray[key] < outputArray[left])
             {
-                key += 1;
+                key = left;
             }
-            if (outputArray[i] < outputArray[key])
+            if (right < n && outputArray[key] < outputArray[right])
             {
-                temp = outputArray[i];
-                outputArray[i] = outputArray[key];
-                outputArray[key] = temp;
-
-                if (key <= outputArray.Length / 2)
-                {
-                    HeapSort_Heap(outputArray, key);
-                }
+                key = right;
             }
+            if (i != key)
+            {
+                temp = outputArray[key];
+                outputArray[key] = outputArray[i];
+                outputArray[i] = temp;
 
+                HeapSort_Heap(outputArray, n, key);
+            }
             return null;
         }
-        public object HeapSort_Sort(int[] outputArray, int i)
+        public object HeapSort_Sort(int[] outputArray)
         {
-            int head, key, temp;
+            int temp;
 
-            temp = outputArray[1];
-            outputArray[1] = outputArray[i];
-            outputArray[i] = temp;
-
-            head = 1;
-            key = 2;
-
-            while (key/2 < i)
+            for (int i = outputArray.Length / 2 - 1; i >= 0; i--)
             {
-                key = 2 * head;
-                if (key < i-1 && outputArray[key] < outputArray[key+1])
-                {
-                    key += 1;
-                }
-                if (key < i && outputArray[head] < outputArray[key])
-                {
-                    temp = outputArray[head];
-                    outputArray[head] = outputArray[key];
-                    outputArray[key] = temp;
-                }
-                head = key;
+                HeapSort_Heap(outputArray, outputArray.Length, i);
+            }
+            for (int i = outputArray.Length - 1; i > 0; i--)
+            {
+                temp = outputArray[0];
+                outputArray[0] = outputArray[i];
+                outputArray[i] = temp;
+                HeapSort_Heap(outputArray, i, 0);
+            }
+            return null;
+        }
+        public object HeapSort_Heap_D(int[] outputArray, int n, int i)
+        {
+            int key, left, right, temp;
+            key = i;
+            left = i * 2 + 1;
+            right = i * 2 + 2;
+
+            if (left < n && outputArray[key] > outputArray[left])
+            {
+                key = left;
+            }
+            if (right < n && outputArray[key] > outputArray[right])
+            {
+                key = right;
+            }
+            if (i != key)
+            {
+                temp = outputArray[key];
+                outputArray[key] = outputArray[i];
+                outputArray[i] = temp;
+
+                HeapSort_Heap_D(outputArray, n, key);
+            }
+            return null;
+        }
+        public object HeapSort_Sort_D(int[] outputArray)
+        {
+            int temp;
+
+            for (int i = outputArray.Length / 2 - 1; i >= 0; i--)
+            {
+                HeapSort_Heap_D(outputArray, outputArray.Length, i);
+            }
+            for (int i = outputArray.Length - 1; i > 0; i--)
+            {
+                temp = outputArray[0];
+                outputArray[0] = outputArray[i];
+                outputArray[i] = temp;
+                HeapSort_Heap_D(outputArray, i, 0);
             }
             return null;
         }
@@ -443,6 +565,17 @@ namespace MME_Algorithm_Report_Sort_01
             long time = stopwatch.ElapsedMilliseconds;
             // 소요 시간 출력 초기화
             textBox_TimeComplex.Clear();
+            progress.Value += 5;
+            // 출력 초기화
+            textBox_Bubble.Clear();
+            textBox_Comb.Clear();
+            textBox_Insertion.Clear();
+            textBox_Quick.Clear();
+            textBox_Radix.Clear();
+            textBox_Selection.Clear();
+            textBox_Shell.Clear();
+            textBox_2Merge.Clear();
+            textBox_Heap.Clear();
             progress.Value += 5;
 
             // 선택된 항목들에 대한 정렬 수행
@@ -501,11 +634,16 @@ namespace MME_Algorithm_Report_Sort_01
                 progress.Value += 10;
             }
 
-            /*
             if (checkBox_2Merge.Checked == true)
+            {
+                stopwatch.Start();
                 MergeSort(mainArray);
-            progress.Value += 10;
-             */
+                stopwatch.Stop();
+                time = stopwatch.ElapsedMilliseconds;
+                textBox_TimeComplex.Text += "병합 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                stopwatch.Reset();
+                progress.Value += 10;
+            }
 
             if (checkBox_Selection.Checked == true)
             {
@@ -578,6 +716,8 @@ namespace MME_Algorithm_Report_Sort_01
         {
             if (inputBox_max.TextLength == 0 || inputBox_min.TextLength == 0 || inputBox_num.TextLength == 0)
                 MessageBox.Show("입력되지 않은 값이 존재합니다!");
+            else if (Convert.ToInt32(inputBox_min.Text) > Convert.ToInt32(inputBox_max.Text))
+                MessageBox.Show("최소값은 최대값보다 작아야 합니다!");
             else
             {
                 // 변수 선언
