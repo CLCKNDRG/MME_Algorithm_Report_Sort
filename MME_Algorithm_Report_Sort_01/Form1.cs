@@ -251,8 +251,15 @@ namespace MME_Algorithm_Report_Sort_01
 
             left = 0;
             right = outputArray.Length - 1;
-
-            QuickSort_Sort(outputArray, left, right);
+            
+            if (ascend.Checked == true)
+            {
+                QuickSort_Sort(outputArray, left, right);
+            }
+            else if (descend.Checked == true)
+            {
+                QuickSort_Sort_D(outputArray, left, right);
+            }
 
             OutputPrint(textBox_Quick, outputArray);
             return null;
@@ -260,72 +267,92 @@ namespace MME_Algorithm_Report_Sort_01
         public int QuickSort_Partition(int[] outputArray, int left, int right)
         {
             int temp;
-
             int pivot = outputArray[left];
-            int low = left + 1;
-            int high = right;
 
-            while (low <= high)
+            while (true)
             {
-                while (pivot >= outputArray[low] && low <= right)
+                while (outputArray[left] < pivot)
                 {
-                    low++;
+                    left++;
                 }
-                while (pivot <= outputArray[high] && high >= left+1)
+                while (outputArray[right] > pivot)
                 {
-                    high--;
+                    right--;
                 }
-                if (low <= high)
+                if (left < right)
                 {
-                    temp = outputArray[low];
-                    outputArray[low] = outputArray[high];
-                    outputArray[high] = temp;
+                    temp = outputArray[right];
+                    outputArray[right] = outputArray[left];
+                    outputArray[left] = temp;
+                }
+                else
+                {
+                    return right;
                 }
             }
-            temp = outputArray[left];
-            outputArray[left] = outputArray[high];
-            outputArray[high] = temp;
+        }
+        public object QuickSort_Sort(int[] outputArray, int left, int right)
+        {
+            int pivot;
 
-            return high;
+            if (left < right)
+            {
+                pivot = QuickSort_Partition(outputArray, left, right);
+
+                if (pivot > 1)
+                {
+                    QuickSort_Sort(outputArray, left, pivot - 1);
+                }
+                if (pivot + 1 < right)
+                {
+                    QuickSort_Sort(outputArray, pivot + 1, right);
+                }
+            }
+            return null;
         }
         public int QuickSort_Partition_D(int[] outputArray, int left, int right)
         {
             int temp;
-
             int pivot = outputArray[left];
-            int low = right;
-            int high = left + 1;
 
-            while (low <= high)
+            while (true)
             {
-                while (pivot >= outputArray[low] && low <= left + 1)
+                while (outputArray[left] > pivot)
                 {
-                    low--;
+                    left++;
                 }
-                while (pivot <= outputArray[high] && high >= right)
+                while (outputArray[right] < pivot)
                 {
-                    high++;
+                    right--;
                 }
-                if (low >= high)
+                if (left < right)
                 {
-                    temp = outputArray[low];
-                    outputArray[low] = outputArray[high];
-                    outputArray[high] = temp;
+                    temp = outputArray[right];
+                    outputArray[right] = outputArray[left];
+                    outputArray[left] = temp;
+                }
+                else
+                {
+                    return right;
                 }
             }
-            temp = outputArray[left];
-            outputArray[left] = outputArray[high];
-            outputArray[high] = temp;
-
-            return high;
         }
-        public object QuickSort_Sort(int[] outputArray, int left, int right)
+        public object QuickSort_Sort_D(int[] outputArray, int left, int right)
         {
-            if (left <= right)
+            int pivot;
+
+            if (left < right)
             {
-                int pivot = QuickSort_Partition(outputArray, left, right);
-                QuickSort_Sort(outputArray, left, pivot - 1);
-                QuickSort_Sort(outputArray, pivot + 1, right);
+                pivot = QuickSort_Partition_D(outputArray, left, right);
+
+                if (pivot > 1)
+                {
+                    QuickSort_Sort_D(outputArray, left, pivot - 1);
+                }
+                if (pivot + 1 < right)
+                {
+                    QuickSort_Sort_D(outputArray, pivot + 1, right);
+                }
             }
             return null;
         }
@@ -565,6 +592,36 @@ namespace MME_Algorithm_Report_Sort_01
         }
         //
 
+        // 기수정렬 함수
+        public object RadixSort(int[] inputArray)
+        {
+            int i, j;
+
+            var outputArray = new int[inputArray.Length];
+            for (i = 0; i < outputArray.Length; i++)
+                outputArray[i] = inputArray[i];
+
+
+            OutputPrint(textBox_Radix, outputArray);
+            return null;
+        }
+
+        // 수집정렬 함수
+        public object CountingSort(int[] inputArray)
+        {
+            //https://exceptionnotfound.net/radix-sort-csharp-the-sorting-algorithm-family-reunion/
+            int i, j;
+
+            var outputArray = new int[inputArray.Length];
+            for (i = 0; i < outputArray.Length; i++)
+                outputArray[i] = inputArray[i];
+
+
+            OutputPrint(textBox_Radix, outputArray);
+            return null;
+
+        }
+
         // 정렬 실행 버튼
         private void button1_Click(object sender, EventArgs e)
         {
@@ -677,11 +734,16 @@ namespace MME_Algorithm_Report_Sort_01
                 progress.Value += 10;
             }
 
-            /*
             if (checkBox_Radix.Checked == true)
+            {
+                stopwatch.Start();
                 RadixSort(mainArray);
-            progress.Value += 10;
-             */
+                stopwatch.Stop();
+                time = stopwatch.ElapsedMilliseconds;
+                textBox_TimeComplex.Text += "기수 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                stopwatch.Reset();
+                progress.Value += 10;
+            }
 
             // 하단 진행 표시 바 채우고 메세지 출력
             progress.Value = 100;
