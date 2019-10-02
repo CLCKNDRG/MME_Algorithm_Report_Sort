@@ -110,7 +110,7 @@ namespace MME_Algorithm_Report_Sort_01
                         }
                     }
                     // 내림차순 정렬
-                    else if(descend.Checked == true)
+                    else if (descend.Checked == true)
                     {
                         while ((j >= gap) && (outputArray[j - gap] < temp))
                         {
@@ -223,7 +223,7 @@ namespace MME_Algorithm_Report_Sort_01
                         }
                     }
                     // 내림차순 정렬
-                    else if(descend.Checked == true)
+                    else if (descend.Checked == true)
                     {
                         if (outputArray[j] < outputArray[j + 1])
                         {
@@ -251,16 +251,15 @@ namespace MME_Algorithm_Report_Sort_01
 
             left = 0;
             right = outputArray.Length - 1;
-            
+
             if (ascend.Checked == true)
             {
                 QuickSort_Sort(outputArray, left, right);
             }
-            else if (descend.Checked == true)
+            if (descend.Checked == true)
             {
                 QuickSort_Sort_D(outputArray, left, right);
             }
-
             OutputPrint(textBox_Quick, outputArray);
             return null;
         }
@@ -396,7 +395,7 @@ namespace MME_Algorithm_Report_Sort_01
             k = left;
 
             // 분할 된 배열을 합병한다
-            while (i<=mid && j<=right)
+            while (i <= mid && j <= right)
             {
                 // 오름차순 정렬
                 if (ascend.Checked == true)
@@ -434,7 +433,7 @@ namespace MME_Algorithm_Report_Sort_01
             {
                 sortArray[k++] = outputArray[j++];
             }
-            for (i=left; i<=right; i++)
+            for (i = left; i <= right; i++)
             {
                 outputArray[i] = sortArray[i];
             }
@@ -595,18 +594,67 @@ namespace MME_Algorithm_Report_Sort_01
         // 기수정렬 함수
         public object RadixSort(int[] inputArray)
         {
-            int i, j;
-
             var outputArray = new int[inputArray.Length];
-            for (i = 0; i < outputArray.Length; i++)
+            for (int i = 0; i < outputArray.Length; i++)
                 outputArray[i] = inputArray[i];
 
-
+            if (ascend.Checked == true)
+            {
+                RadixSort_Sort(outputArray);
+            }
+            else if (descend.Checked == true)
+            {
+                RadixSort_Sort_D(outputArray);
+            }
             OutputPrint(textBox_Radix, outputArray);
             return null;
         }
+        public object RadixSort_Sort(int[] outputArray)
+        {
+            int i, j;
+
+            int[] sortArray = new int[outputArray.Length];
+
+            for (int shift = 31; shift > -1; shift--)
+            {
+                j = 0;
+                for (i = 0; i < outputArray.Length; i++)
+                {
+                    bool move = (outputArray[i] << shift) >= 0;
+                    if (shift == 0 ? !move : move)
+                        outputArray[i - j] = outputArray[i];
+                    else
+                        sortArray[j++] = outputArray[i];
+                }
+                Array.Copy(sortArray, 0, outputArray, outputArray.Length - j, j);
+            }
+            return null;
+        }
+        public object RadixSort_Sort_D(int[] outputArray)
+        {
+            int i, j;
+
+            int[] sortArray = new int[outputArray.Length];
+
+            for (int shift = 31; shift > -1; shift--)
+            {
+                j = 0;
+                for (i = 0; i < outputArray.Length; i++)
+                {
+                    bool move = (outputArray[i] << shift) >= 0;
+                    if (shift == 0 ? move : !move)
+                        outputArray[i - j] = outputArray[i];
+                    else
+                        sortArray[j++] = outputArray[i];
+                }
+                Array.Copy(sortArray, 0, outputArray, outputArray.Length - j, j);
+            }
+            return null;
+        }
+        //
 
         // 수집정렬 함수
+        /*
         public object CountingSort(int[] inputArray)
         {
             //https://exceptionnotfound.net/radix-sort-csharp-the-sorting-algorithm-family-reunion/
@@ -621,6 +669,7 @@ namespace MME_Algorithm_Report_Sort_01
             return null;
 
         }
+        */
 
         // 정렬 실행 버튼
         private void button1_Click(object sender, EventArgs e)
@@ -634,16 +683,26 @@ namespace MME_Algorithm_Report_Sort_01
             textBox_TimeComplex.Clear();
             progress.Value += 5;
             // 출력 초기화
-            textBox_Bubble.Clear();
-            textBox_Comb.Clear();
             textBox_Insertion.Clear();
-            textBox_Quick.Clear();
-            textBox_Radix.Clear();
-            textBox_Selection.Clear();
             textBox_Shell.Clear();
+            textBox_Comb.Clear();
+            textBox_Bubble.Clear();
+            textBox_Quick.Clear();
             textBox_2Merge.Clear();
+            textBox_Selection.Clear();
             textBox_Heap.Clear();
+            textBox_Radix.Clear();
             progress.Value += 5;
+            // 차트1 초기화
+            chart1.Series["삽입정렬"].Points.Clear();
+            chart1.Series["셸정렬"].Points.Clear();
+            chart1.Series["빗질정렬"].Points.Clear();
+            chart1.Series["버블정렬"].Points.Clear();
+            chart1.Series["퀵정렬"].Points.Clear();
+            chart1.Series["병합정렬"].Points.Clear();
+            chart1.Series["선택정렬"].Points.Clear();
+            chart1.Series["힙정렬"].Points.Clear();
+            chart1.Series["기수정렬"].Points.Clear();
 
             // 선택된 항목들에 대한 정렬 수행
             if (checkBox_Insertion.Checked == true)
@@ -653,6 +712,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "삽입 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["삽입정렬"].Points.Add(time);
+                chart2.Series["삽입정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -664,6 +725,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "셸 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["셸정렬"].Points.Add(time);
+                chart2.Series["셸정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -675,6 +738,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "빗질 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["빗질정렬"].Points.Add(time);
+                chart2.Series["빗질정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -686,6 +751,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "버블 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["버블정렬"].Points.Add(time);
+                chart2.Series["버블정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -697,6 +764,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "퀵 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["퀵정렬"].Points.Add(time);
+                chart2.Series["퀵정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -708,6 +777,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "병합 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["병합정렬"].Points.Add(time);
+                chart2.Series["병합정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -718,7 +789,9 @@ namespace MME_Algorithm_Report_Sort_01
                 SelectionSort(mainArray);
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
-                textBox_TimeComplex.Text += "선택 정렬: " + string.Format("{0:0.000}", (double)time/1000) + "(s/초)" + "\r\n";
+                textBox_TimeComplex.Text += "선택 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["선택정렬"].Points.Add(time);
+                chart2.Series["선택정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -730,6 +803,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "힙 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["힙정렬"].Points.Add(time);
+                chart2.Series["힙정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -741,6 +816,8 @@ namespace MME_Algorithm_Report_Sort_01
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 textBox_TimeComplex.Text += "기수 정렬: " + string.Format("{0:0.000}", (double)time / 1000) + "(s/초)" + "\r\n";
+                chart1.Series["기수정렬"].Points.Add(time);
+                chart2.Series["기수정렬"].Points.Add(time);
                 stopwatch.Reset();
                 progress.Value += 10;
             }
@@ -811,6 +888,39 @@ namespace MME_Algorithm_Report_Sort_01
                 InputPrint(textBox_inputBox, inputArray);
             }
         }
+        // 모든 정렬 선택 및 해제
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (button3.Text == "모든 정렬 선택")
+            {
+                checkBox_Insertion.Checked = true;
+                checkBox_Shell.Checked = true;
+                checkBox_Comb.Checked = true;
+                checkBox_Bubble.Checked = true;
+                checkBox_Quick.Checked = true;
+                checkBox_2Merge.Checked = true;
+                checkBox_Selection.Checked = true;
+                checkBox_Heap.Checked = true;
+                checkBox_2Merge.Checked = true;
+                checkBox_Radix.Checked = true;
+                button3.Text = "모든 정렬 해제";
+            }
+            else
+            {
+                checkBox_Insertion.Checked = false;
+                checkBox_Shell.Checked = false;
+                checkBox_Comb.Checked = false;
+                checkBox_Bubble.Checked = false;
+                checkBox_Quick.Checked = false;
+                checkBox_2Merge.Checked = false;
+                checkBox_Selection.Checked = false;
+                checkBox_Heap.Checked = false;
+                checkBox_2Merge.Checked = false;
+                checkBox_Radix.Checked = false;
+                button3.Text = "모든 정렬 선택";
+            }
+
+        }
         // 자동 생성 값을 입력하기 위해 마우스를 클릭했을 시 수동 입력을 초기화
         private void inputBox_min_Enter(object sender, EventArgs e)
         {
@@ -830,6 +940,10 @@ namespace MME_Algorithm_Report_Sort_01
         public Form1()
         {
             InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ascend.Checked = true;
         }
     }
 }

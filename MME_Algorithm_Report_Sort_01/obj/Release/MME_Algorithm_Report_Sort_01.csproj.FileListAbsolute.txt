@@ -1,0 +1,9 @@
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\bin\Release\MME_Algorithm_Report_Sort_01.exe.config
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\bin\Release\MME_Algorithm_Report_Sort_01.exe
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\bin\Release\MME_Algorithm_Report_Sort_01.pdb
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\obj\Release\MME_Algorithm_Report_Sort_01.Form1.resources
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\obj\Release\MME_Algorithm_Report_Sort_01.Properties.Resources.resources
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\obj\Release\MME_Algorithm_Report_Sort_01.csproj.GenerateResource.cache
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\obj\Release\MME_Algorithm_Report_Sort_01.exe
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\obj\Release\MME_Algorithm_Report_Sort_01.pdb
+C:\Users\Kim Sun Wook\Source\Repos\CLCKNDRG\MME_Algorithm_Report_Sort\MME_Algorithm_Report_Sort_01\obj\Release\MME_Algorithm_Report_Sort_01.csprojAssemblyReference.cache
